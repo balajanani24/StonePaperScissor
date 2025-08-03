@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rock Paper Scissors</title>
+    <style>
+        body{
+             background-image: url('green-park-view.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed; /* optional */
+  margin: 0;
+  height: 100vh;
+        }
+
+      .help {
+        display: inline-block;
+      }
+
+      #stone,
+      #paper,
+      #scissor {
+        position: relative;
+        left: 400px;
+        height: 150px;
+        width: 150px;
+        margin-top: 20px;
+        font-size: 50px;
+        cursor: pointer;
+        border-radius: 10px;
+        backdrop-filter: blur(5px);
+        background-color: transparent;
+        z-index: 1;
+
+        
+      }
+
+      #computer-move {
+        position: relative;
+        left: 600px;
+        height: 150px;
+        width: 150px;
+        margin-top: 20px;
+        font-size: 50px;
+      }
+
+      .totdiv {
+        position: absolute;
+        top: 70%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .scoreboard {
+        display: flex;
+        gap: 40px;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #userscores,
+      #cmpscores,
+      #perresult,
+      #temresult,
+      #gameover {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      #temresult {
+        color: darkblue;
+        font-weight: bold;
+        min-height: 24px; /* Keep space so text doesn't jump */
+      }
+
+      .resetbtn {
+        height: 50px;
+        width: 200px;
+        border-radius: 10px;
+        cursor: pointer;
+        background-color: transparent;
+        backdrop-filter: blur(5px);
+      }
+    </style>
+  </head>
+  <body class="help">
+    <button id="stone" value="stone" onclick="display(event)">👊</button>
+    <button id="paper" value="paper" onclick="display(event)">✋</button>
+    <button id="scissor" value="scissor" onclick="display(event)">✌</button>
+
+    <p><span id="computer-move">❔</span></p>
+
+    <div class="totdiv">
+      <div class="scoreboard">
+        <p id="userscores"></p>
+        <p id="cmpscores"></p>
+      </div>
+
+      <h3 id="temresult"></h3>
+      <h2 id="perresult"></h2>
+      <h1 id="gameover"></h1>
+      <button class="resetbtn" onclick="resetGame()">Reset Game</button>
+    </div>
+
+    <script>
+      let round = 0;
+      const maxRounds = 3;
+      let userscore = 0;
+      let computerscore = 0;
+      let isGameOver = false;
+
+      const chance = ["stone", "paper", "scissor"];
+      const moveDisplay = document.getElementById("computer-move");
+      const tempresult = document.getElementById("temresult");
+      const permresult = document.getElementById("perresult");
+      const gameOver = document.getElementById("gameover");
+      const Uscore = document.getElementById("userscores");
+      const Cscores = document.getElementById("cmpscores");
+
+      function display(event) {
+        if (isGameOver) return;
+
+        const userChoice = event.target.value;
+        const computerChoice =
+          chance[Math.floor(Math.random() * chance.length)];
+
+        // Display computer emoji
+        moveDisplay.textContent =
+          computerChoice === "stone"
+            ? "👊"
+            : computerChoice === "paper"
+            ? "✋"
+            : "✌️";
+
+        if (userChoice === computerChoice) {
+          tempresult.textContent = "Tie";
+        } else if (
+          (userChoice === "stone" && computerChoice === "scissor") ||
+          (userChoice === "scissor" && computerChoice === "paper") ||
+          (userChoice === "paper" && computerChoice === "stone")
+        ) {
+          userscore++;
+          tempresult.textContent = "User got one point";
+        } else {
+          computerscore++;
+          tempresult.textContent = "Computer got one point";
+        }
+
+        round++;
+        Uscore.textContent = "User Score: " + userscore;
+        Cscores.textContent = "Computer Score: " + computerscore;
+
+        if (round >= maxRounds) {
+          showresult();
+        }
+      }
+
+      function showresult() {
+        if (userscore > computerscore) {
+          permresult.textContent = "🏆 Final Result: You won the game!";
+        } else if (computerscore > userscore) {
+          permresult.textContent = "😞 Final Result: Computer won the game!";
+        } else {
+          permresult.textContent = "🤝 Final Result: It's a tie!";
+        }
+
+        gameOver.textContent = "🚫 Game Over. Click any move to play again.";
+        isGameOver = true;
+      }
+
+      function resetGame() {
+        round = 0;
+        userscore = 0;
+        computerscore = 0;
+        isGameOver = false;
+        moveDisplay.textContent = "❔";
+        tempresult.textContent = "";
+        permresult.textContent = "";
+        gameOver.textContent = "";
+        Uscore.textContent = "";
+        Cscores.textContent = "";
+      }
+    </script>
+  </body>
+</html>
